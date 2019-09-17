@@ -1,0 +1,45 @@
+.student {
+    border: 1px solid black;
+    margin-top: 5px;
+  }
+  .hide {
+    display: none;
+  }
+  .modalbg {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    overflow: auto;
+  }
+  #modal {
+    background-color: red;
+    width: 65%;
+    position: relative;
+    margin: 5% auto;
+    padding: 2em;
+  }
+  #modal img {
+    width: 100%;
+    object-fit: scale-down;
+    margin: 0;
+  }
+  .modalbg.hide {
+    display: none;
+  }
+  /* Close Button */
+  .close {
+    color: black;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  .close:hover,
+  .close:focus {
+    color: aqua;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>Hacked Hogwarts Studentlist</title>
+  </head>
+  <body>
+    <h1>Students enrolled at Hogwarts in 1991</h1>
+    <div id="filter">
+      Filter:
+      <button type="button" class="ravenclaw">Ravenclaw</button>
+      <button type="button" class="slytherin">Slytherin</button>
+      <button type="button" class="gryffindor">Gryffindor</button>
+      <button type="button" class="hufflepuff">Hufflepuff</button>
+      <button type="button" class="all">All</button>
+    </div>
+    <table id="list">
+      <thead>
+        <tr id="sorting">
+          <th data-sort="firstName">
+            <a href="#" class="firstNameButton">First Name</a>
+          </th>
+          <th data-sort="lastName">
+            <a href="#" class="lastNameButton">Last Name</a>
+          </th>
+          <th data-sort="house"><a href="#" class="houseButton">House</a></th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- animal template will be copied and inserted here -->
+      </tbody>
+    </table>
+
+    <template id="studentList">
+      <tr>
+        <td data-field="firstName">First Name</td>
+        <td data-field="lastName">Last Name</td>
+        <!--<td data-field="middleName">Middle Name</td> -->
+        <!--<td data-field="nickName">Nick Name</td> -->
+        <td data-field="house">House</td>
+      </tr>
+    </template>
+
+    <!--<div class="modalbg hide">
+          <article id="modal">
+            <span class="close">&times;</span>
+            <img class="modal-img" src="person-placeholder.jpg" />
+            <p class="modal-description">DESCRIPTION</p>
+            <img class="modal-crest" src="" />
+          </article>
+        </div> -->
+
+    <script src="script.js"></script>
+  </body>
+</html>
