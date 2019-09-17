@@ -9,6 +9,7 @@
   </head>
   <body>
     <h1>Students enrolled at Hogwarts in 1991</h1>
+    <p>Number of students expelled: <span id="noOfStudExpelled"></span></p>
     <div id="filter">
       Filter:
       <button type="button" class="ravenclaw">Ravenclaw</button>
@@ -17,19 +18,27 @@
       <button type="button" class="hufflepuff">Hufflepuff</button>
       <button type="button" class="all">All</button>
     </div>
+    <div>
+      <label>
+        Sort by:
+        <select id="sorting">
+          <option value="firstName" selected="selected">First Name</option>
+          <option value="lastName">Last Name</option>
+          <option value="house">House</option>
+        </select>
+      </label>
+    </div>
     <table id="list">
       <thead>
-        <tr id="sorting">
-          <th data-sort="firstName">
-            <a href="#" class="firstNameButton">First Name</a>
-          </th>
-          <th data-sort="lastName">
-            <a href="#" class="lastNameButton">Last Name</a>
-          </th>
-          <th data-sort="house"><a href="#" class="houseButton">House</a></th>
-        </tr>
+        <th data-sort="firstName">
+          First Name
+        </th>
+        <th data-sort="lastName">
+          Last Name
+        </th>
+        <th data-sort="house">House</th>
       </thead>
-      <tbody>
+      <tbody id="students">
         <!-- animal template will be copied and inserted here -->
       </tbody>
     </table>
@@ -41,17 +50,23 @@
         <!--<td data-field="middleName">Middle Name</td> -->
         <!--<td data-field="nickName">Nick Name</td> -->
         <td data-field="house">House</td>
+        <td>
+          <button data-action="openButton">Details</button>
+        </td>
+        <td><button data-action="remove">EXPEL</button></td>
       </tr>
     </template>
 
-    <!--<div class="modalbg hide">
-          <article id="modal">
-            <span class="close">&times;</span>
-            <img class="modal-img" src="person-placeholder.jpg" />
-            <p class="modal-description">DESCRIPTION</p>
-            <img class="modal-crest" src="" />
-          </article>
-        </div> -->
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+      <!-- Modal content -->
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <p class="modal-fullname">Full Name</p>
+        <img class="modal-image" src="student-image" alt="some img" />
+        <img class="modal-crest" src="#" alt="house crest" />
+      </div>
+    </div>
 
     <script src="script.js"></script>
   </body>
