@@ -5,23 +5,16 @@ let modal = document.querySelector(".modal");
 let close = document.querySelector(".close");
 let modalImg = document.querySelector("modal-image");
 
-function toggleModal() {
-  modal.classList.toggle("show-modal");
-}
-function windowOnClick(event) {
-  if (event.target === modal) {
-    toggleModal();
-  }
-}
-close.addEventListener("click", toggleModal);
 window.addEventListener("DOMContentLoaded", start);
 
 const allStudents = [];
-let filteredList = [];
 let expelledList = [];
+let activeList = [];
+let currentList = activeList.concat(expelledList);
 function start() {
   document.querySelector("#sorting").addEventListener("change", selectSorting);
   document.querySelector("#students").addEventListener("click", clickSomething);
+
   document.querySelector(".ravenclaw").addEventListener("click", function() {
     filterList("Ravenclaw");
   });
@@ -38,32 +31,27 @@ function start() {
     rebuildList();
   });
   document.querySelector("#noOfStudExpelled").innerHTML = expelledList.length;
+
   loadJSON();
 }
 function clickSomething(event) {
   const element = event.target; //the thing that was clicked
+
+  const uuid = element.dataset.attribute;
   if (element.dataset.action === "remove") {
-    let studentId = element.dataset.attribute;
-    let selectedStudent = allStudents.find(student => student.id === studentId);
+    let selectedStudent = activeList.find(student => student.id === uuid);
+    element.value = "EXPELLED";
+    element.classList.add = "buttonstyle";
     expelledList.push(selectedStudent);
     document.querySelector("#noOfStudExpelled").innerHTML = expelledList.length;
-    element.parentElement.parentElement.classList.add("shrink");
-    element.parentElement.parentElement.addEventListener(
-      "animationend",
-      function() {
-        element.parentElement.parentElement.remove();
-      }
-    );
-  } else if (element.dataset.action === "openButton") {
-    toggleModal();
+    const indexOfActiveList = activeList.findIndex(studentId);
+    activeList.splice(indexOfActiveList, 1);
+
+    //const indexOfCurrentList = currentList.findIndex(studentId);
+    //currentList.splice(indexOfCurrentList, 1);
+
+    document.querySelector("#noOfActiveStud").innerHTML = activeList.length;
   }
-  const uuid = element.dataset.attribute;
-
-  const indexOfCurrentList = filteredList.findIndex(studentId);
-  filteredList.splice(indexOfCurrentList, 1);
-
-  const indexOfAllList = allStudents.findIndex(studentId);
-  allStudents.splice(indexOfAllList, 1);
 
   function studentId(student) {
     if (student.id === uuid) {
@@ -72,12 +60,15 @@ function clickSomething(event) {
       return false;
     }
   }
+  //return uuid;
 }
+
 function selectSorting(event) {
   const sortBy = event.target.value;
   sortListBy(sortBy);
-  displayList(filteredList);
+  displayList(currentList);
 }
+
 function loadJSON() {
   fetch(studentList_link)
     .then(response => response.json())
@@ -110,6 +101,8 @@ function cleanObjects(jsonData) {
     student.house = capitalize(trimHouse);
     student.id = create_UUID();
     allStudents.push(student);
+    activeList.push(student);
+    document.querySelector("#noOfActiveStud").innerHTML = activeList.length;
   });
 
   rebuildList();
@@ -117,14 +110,15 @@ function cleanObjects(jsonData) {
 function rebuildList() {
   filterList("all");
   sortListBy("firstName");
-  displayList(filteredList);
+  displayList(currentList);
+  console.log(currentList);
 }
 function capitalize(str) {
   let cap = str[0].toUpperCase() + str.slice(1).toLowerCase();
   return cap;
 }
 function filterList(house) {
-  filteredList = allStudents.filter(filterByHouse);
+  currentList = allStudents.filter(filterByHouse);
   function filterByHouse(student) {
     if (student.house === house || house === "all") {
       return true;
@@ -132,13 +126,13 @@ function filterList(house) {
       return false;
     }
   }
-  displayList(filteredList);
+  displayList(currentList);
 }
 function sortListBy(prop) {
-  filteredList.sort((a, b) => {
+  currentList.sort((a, b) => {
     return a[prop].localeCompare(b[prop]);
   });
-  displayList(filteredList);
+  displayList(currentList);
 }
 
 function displayList(students) {
@@ -148,28 +142,35 @@ function displayList(students) {
 }
 
 function displayStudent(student) {
-  // create clone
   const clone = document
     .querySelector("template#studentList")
     .content.cloneNode(true);
-  // set clone data
+
   clone.querySelector("[data-field=firstName]").textContent = student.firstName;
   clone.querySelector("[data-field=lastName]").textContent = student.lastName;
   clone.querySelector("[data-field=house]").textContent = student.house;
 
-  //store the index on the button
   clone.querySelector("[data-action=remove]").dataset.attribute = student.id;
-  clone.querySelector("[data-action=openButton]").dataset.attribute =
-    student.id;
+
   clone
     .querySelector("[data-action=openButton]")
     .addEventListener("click", function() {
+      toggleModal();
       showDetails(student);
     });
 
   // append clone to list
   document.querySelector("#list tbody").appendChild(clone);
 }
+function toggleModal() {
+  modal.classList.toggle("show-modal");
+}
+function windowOnClick(event) {
+  if (event.target === modal) {
+    toggleModal();
+  }
+}
+close.addEventListener("click", toggleModal);
 function showDetails(data) {
   if (data.middleName !== "-middleName-") {
     modal.querySelector(".modal-fullname").textContent =
@@ -187,6 +188,9 @@ function showDetails(data) {
       ".modal-image"
     ).src = `images/${data.lastName.toLowerCase()}_${data.firstName[0].toLowerCase()}.png`;
   }
+  modal.querySelector(
+    ".modal-crest"
+  ).src = `images/crest/${data.house.toLowerCase()}-crest.jpg`;
 }
 
 //Prototype for Student

@@ -26,6 +26,10 @@
   width: 24rem;
   border-radius: 0.5rem;
 }
+.modal-crest {
+  width: 30%;
+  height: 30%;
+}
 .close {
   float: right;
   width: 1.5rem;
@@ -54,4 +58,7 @@
   to {
     transform: scale(1, 0);
   }
+}
+.buttonstyle {
+  background-color: red;
 }

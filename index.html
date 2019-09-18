@@ -10,6 +10,7 @@
   <body>
     <h1>Students enrolled at Hogwarts in 1991</h1>
     <p>Number of students expelled: <span id="noOfStudExpelled"></span></p>
+    <p>Number of active students: <span id="noOfActiveStud"></span></p>
     <div id="filter">
       Filter:
       <button type="button" class="ravenclaw">Ravenclaw</button>
@@ -47,13 +48,13 @@
       <tr>
         <td data-field="firstName">First Name</td>
         <td data-field="lastName">Last Name</td>
-        <!--<td data-field="middleName">Middle Name</td> -->
-        <!--<td data-field="nickName">Nick Name</td> -->
         <td data-field="house">House</td>
         <td>
           <button data-action="openButton">Details</button>
         </td>
-        <td><button data-action="remove">EXPEL</button></td>
+        <td>
+          <input type="button" value="EXPEL" data-action="remove" id="remove" />
+        </td>
       </tr>
     </template>
 
@@ -62,9 +63,12 @@
       <!-- Modal content -->
       <div class="modal-content">
         <span class="close">&times;</span>
+        <img class="modal-crest" src="student-crest" alt="house crest" />
         <p class="modal-fullname">Full Name</p>
         <img class="modal-image" src="student-image" alt="some img" />
-        <img class="modal-crest" src="#" alt="house crest" />
+        <p class="modal-expel"></p>
+
+        <input type="button" value="MAKE PREFECT" data-action="add-prefect" />
       </div>
     </div>
 
