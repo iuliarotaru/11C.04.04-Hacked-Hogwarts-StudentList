@@ -60,5 +60,72 @@
   }
 }
 .buttonstyle {
-  background-color: red;
+  color: red;
+}
+[data-field="expelledStatus"] {
+  color: red;
+}
+header {
+  text-align: center;
+}
+#classroom {
+  width: 40%;
+  height: 40%;
+  margin-top: 20px;
+}
+body {
+  margin: 0;
+  text-align: center;
+}
+html {
+  background-color: #ede0b3;
+}
+h1,
+h3 {
+  text-align: center;
+}
+p,
+span {
+  font-size: 20px;
+  font-weight: bold;
+  display: inline-block;
+  padding: 10px;
+  margin: 10px;
+}
+tr {
+  font-size: 20px;
+  border: 1px solid black;
+  margin-left: 10px;
+}
+button {
+  background-color: #7ba2ba;
+  text-decoration: none;
+  padding: 5px;
+  border-radius: 12px;
+  border: none;
+}
+button {
+  display: inline-block;
+  padding: 5px;
+  font-size: 15px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: #fff;
+  background-color: #7ba2ba;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 9px #999;
+  margin-bottom: 20px;
+}
+
+button:hover {
+  background-color: #6e6853;
+}
+
+button:active {
+  background-color: #6e6853;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
 }

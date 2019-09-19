@@ -8,9 +8,11 @@ let modalImg = document.querySelector("modal-image");
 window.addEventListener("DOMContentLoaded", start);
 
 const allStudents = [];
-let expelledList = [];
-let activeList = [];
+const expelledList = [];
+const activeList = [];
 let currentList = activeList.concat(expelledList);
+const prefectList = [];
+
 function start() {
   document.querySelector("#sorting").addEventListener("change", selectSorting);
   document.querySelector("#students").addEventListener("click", clickSomething);
@@ -36,20 +38,19 @@ function start() {
 }
 function clickSomething(event) {
   const element = event.target; //the thing that was clicked
-
   const uuid = element.dataset.attribute;
   if (element.dataset.action === "remove") {
     let selectedStudent = activeList.find(student => student.id === uuid);
+
     element.value = "EXPELLED";
-    element.classList.add = "buttonstyle";
+    element.disabled = "true";
+    element.classList.add("buttonstyle");
+
     expelledList.push(selectedStudent);
     document.querySelector("#noOfStudExpelled").innerHTML = expelledList.length;
     const indexOfActiveList = activeList.findIndex(studentId);
     activeList.splice(indexOfActiveList, 1);
-
-    //const indexOfCurrentList = currentList.findIndex(studentId);
-    //currentList.splice(indexOfCurrentList, 1);
-
+    showNumber();
     document.querySelector("#noOfActiveStud").innerHTML = activeList.length;
   }
 
@@ -62,7 +63,6 @@ function clickSomething(event) {
   }
   //return uuid;
 }
-
 function selectSorting(event) {
   const sortBy = event.target.value;
   sortListBy(sortBy);
@@ -76,7 +76,23 @@ function loadJSON() {
       cleanObjects(jsonData);
     });
 }
-
+function countStudentsFromHouse(house) {
+  return activeList.filter(x => x.house === house).length;
+}
+function showNumber() {
+  document.querySelector(
+    "#noOfStudRavenclaw"
+  ).innerHTML = countStudentsFromHouse("Ravenclaw");
+  document.querySelector(
+    "#noOfStudSlytherin"
+  ).innerHTML = countStudentsFromHouse("Slytherin");
+  document.querySelector(
+    "#noOfStudGryffindor"
+  ).innerHTML = countStudentsFromHouse("Gryffindor");
+  document.querySelector(
+    "#noOfStudHufflepuff"
+  ).innerHTML = countStudentsFromHouse("Hufflepuff");
+}
 function cleanObjects(jsonData) {
   jsonData.forEach(jsonObject => {
     const student = Object.create(StudentPrototype);
@@ -99,10 +115,13 @@ function cleanObjects(jsonData) {
     //clean house
     let trimHouse = jsonObject.house.trim();
     student.house = capitalize(trimHouse);
+
     student.id = create_UUID();
+    student.expel = "EXPELLED";
     allStudents.push(student);
     activeList.push(student);
     document.querySelector("#noOfActiveStud").innerHTML = activeList.length;
+    showNumber();
   });
 
   rebuildList();
@@ -111,7 +130,6 @@ function rebuildList() {
   filterList("all");
   sortListBy("firstName");
   displayList(currentList);
-  console.log(currentList);
 }
 function capitalize(str) {
   let cap = str[0].toUpperCase() + str.slice(1).toLowerCase();
@@ -150,7 +168,14 @@ function displayStudent(student) {
   clone.querySelector("[data-field=lastName]").textContent = student.lastName;
   clone.querySelector("[data-field=house]").textContent = student.house;
 
-  clone.querySelector("[data-action=remove]").dataset.attribute = student.id;
+  let expelledStudent = expelledList.find(stud => stud.id === student.id);
+  if (expelledStudent !== undefined) {
+    clone.querySelector("[data-field=expelledStatus]").textContent =
+      student.expel;
+    clone.querySelector("[data-action=remove]").parentElement.remove();
+  } else if (expelledStudent === undefined) {
+    clone.querySelector("[data-action=remove]").dataset.attribute = student.id;
+  }
 
   clone
     .querySelector("[data-action=openButton]")
@@ -191,6 +216,13 @@ function showDetails(data) {
   modal.querySelector(
     ".modal-crest"
   ).src = `images/crest/${data.house.toLowerCase()}-crest.jpg`;
+
+  let expelledStudent = expelledList.find(stud => stud.id === `${data.id}`);
+  if (expelledStudent !== undefined) {
+    modal.querySelector(".modal-expel").textContent = `${data.expel}`;
+  } else {
+    modal.querySelector(".modal-expel").textContent = "";
+  }
 }
 
 //Prototype for Student
@@ -199,7 +231,9 @@ const StudentPrototype = {
   middleName: "-middleName-",
   lastName: "-lastName-",
   house: "-house-",
-  id: "-uuid-"
+  id: "-uuid-",
+  expel: "-expelled-",
+  prefect: "-prefect-"
 };
 //create UUID source: https://www.w3resource.com/javascript-exercises/javascript-math-exercise-23.php
 function create_UUID() {

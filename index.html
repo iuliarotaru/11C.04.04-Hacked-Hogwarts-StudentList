@@ -8,9 +8,22 @@
     <title>Hacked Hogwarts Studentlist</title>
   </head>
   <body>
-    <h1>Students enrolled at Hogwarts in 1991</h1>
-    <p>Number of students expelled: <span id="noOfStudExpelled"></span></p>
-    <p>Number of active students: <span id="noOfActiveStud"></span></p>
+    <header>
+      <img
+        src="images/hogwarts-logo-symbol-meaning-history-evolution-3.png"
+        src="classroom"
+        id="classroom"
+      />
+    </header>
+    <h1>Hogwarts School of Witchcraft and Wizardy</h1>
+    <h3>Class 1991</h3>
+    <p>Active Students: <span id="noOfActiveStud"></span></p>
+    <p>Expelled: <span id="noOfStudExpelled"></span></p>
+    <p>Ravenclaw: <span id="noOfStudRavenclaw"></span></p>
+    <p>Slytherin: <span id="noOfStudSlytherin"></span></p>
+    <p>Gryffindor: <span id="noOfStudGryffindor"></span></p>
+    <p>Hufflepuff: <span id="noOfStudHufflepuff"></span></p>
+
     <div id="filter">
       Filter:
       <button type="button" class="ravenclaw">Ravenclaw</button>
@@ -55,6 +68,7 @@
         <td>
           <input type="button" value="EXPEL" data-action="remove" id="remove" />
         </td>
+        <td data-field="expelledStatus"></td>
       </tr>
     </template>
 
@@ -68,7 +82,12 @@
         <img class="modal-image" src="student-image" alt="some img" />
         <p class="modal-expel"></p>
 
-        <input type="button" value="MAKE PREFECT" data-action="add-prefect" />
+        <input
+          type="button"
+          value="MAKE PREFECT"
+          data-action="addPrefect"
+          id="add-prefect"
+        />
       </div>
     </div>
 
