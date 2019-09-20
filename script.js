@@ -11,8 +11,8 @@ const allStudents = [];
 const expelledList = [];
 const activeList = [];
 let currentList = activeList.concat(expelledList);
-const prefectList = [];
-
+const prefectsList = [];
+//Function start has event listeners for sorting and filtering, clicking buttons and calls the function that loads JSON
 function start() {
   document.querySelector("#sorting").addEventListener("change", selectSorting);
   document.querySelector("#students").addEventListener("click", clickSomething);
@@ -36,39 +36,8 @@ function start() {
 
   loadJSON();
 }
-function clickSomething(event) {
-  const element = event.target; //the thing that was clicked
-  const uuid = element.dataset.attribute;
-  if (element.dataset.action === "remove") {
-    let selectedStudent = activeList.find(student => student.id === uuid);
-
-    element.value = "EXPELLED";
-    element.disabled = "true";
-    element.classList.add("buttonstyle");
-
-    expelledList.push(selectedStudent);
-    document.querySelector("#noOfStudExpelled").innerHTML = expelledList.length;
-    const indexOfActiveList = activeList.findIndex(studentId);
-    activeList.splice(indexOfActiveList, 1);
-    showNumber();
-    document.querySelector("#noOfActiveStud").innerHTML = activeList.length;
-  }
-
-  function studentId(student) {
-    if (student.id === uuid) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-  //return uuid;
-}
-function selectSorting(event) {
-  const sortBy = event.target.value;
-  sortListBy(sortBy);
-  displayList(currentList);
-}
-
+//Load JSON
+//---------------------------------------------------
 function loadJSON() {
   fetch(studentList_link)
     .then(response => response.json())
@@ -76,23 +45,8 @@ function loadJSON() {
       cleanObjects(jsonData);
     });
 }
-function countStudentsFromHouse(house) {
-  return activeList.filter(x => x.house === house).length;
-}
-function showNumber() {
-  document.querySelector(
-    "#noOfStudRavenclaw"
-  ).innerHTML = countStudentsFromHouse("Ravenclaw");
-  document.querySelector(
-    "#noOfStudSlytherin"
-  ).innerHTML = countStudentsFromHouse("Slytherin");
-  document.querySelector(
-    "#noOfStudGryffindor"
-  ).innerHTML = countStudentsFromHouse("Gryffindor");
-  document.querySelector(
-    "#noOfStudHufflepuff"
-  ).innerHTML = countStudentsFromHouse("Hufflepuff");
-}
+//Prepare the objects
+//----------------------------------------------------
 function cleanObjects(jsonData) {
   jsonData.forEach(jsonObject => {
     const student = Object.create(StudentPrototype);
@@ -118,6 +72,7 @@ function cleanObjects(jsonData) {
 
     student.id = create_UUID();
     student.expel = "EXPELLED";
+    student.prefect = "PREFECT";
     allStudents.push(student);
     activeList.push(student);
     document.querySelector("#noOfActiveStud").innerHTML = activeList.length;
@@ -126,15 +81,20 @@ function cleanObjects(jsonData) {
 
   rebuildList();
 }
+//capitalize
+function capitalize(str) {
+  let cap = str[0].toUpperCase() + str.slice(1).toLowerCase();
+  return cap;
+}
+//Rebuilding the list
+//-----------------------------------------------------
 function rebuildList() {
   filterList("all");
   sortListBy("firstName");
   displayList(currentList);
 }
-function capitalize(str) {
-  let cap = str[0].toUpperCase() + str.slice(1).toLowerCase();
-  return cap;
-}
+//Filter the list
+//----------------------------------------------------
 function filterList(house) {
   currentList = allStudents.filter(filterByHouse);
   function filterByHouse(student) {
@@ -146,19 +106,126 @@ function filterList(house) {
   }
   displayList(currentList);
 }
+//Sort the list
+//---------------------------------------------------
+function selectSorting(event) {
+  const sortBy = event.target.value;
+  sortListBy(sortBy);
+  displayList(currentList);
+}
 function sortListBy(prop) {
   currentList.sort((a, b) => {
     return a[prop].localeCompare(b[prop]);
   });
   displayList(currentList);
 }
+//Function for clicking EXPEL or MAKE PREFECT
+//------------------------------------------------------
+function clickSomething(event) {
+  const element = event.target; //the thing that was clicked
 
+  const uuid = element.dataset.attribute;
+
+  let selectedStudent = activeList.find(student => student.id === uuid);
+
+  function studentId(student) {
+    if (student.id === uuid) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  //if you want to expel a student
+  if (element.dataset.action === "remove") {
+    element.value = "EXPELLED";
+    element.disabled = "true";
+    element.classList.add("buttonstyle");
+    prefectsList.splice(
+      prefectsList.findIndex(student => student.id === selectedStudent.id),
+      1
+    );
+    expelledList.push(selectedStudent);
+
+    document.querySelector("#noOfStudExpelled").innerHTML = expelledList.length;
+    const indexOfActiveList = activeList.findIndex(studentId);
+    activeList.splice(indexOfActiveList, 1);
+
+    showNumber();
+    document.querySelector("#noOfActiveStud").innerHTML = activeList.length;
+  }
+  //if you want to make the student prefect
+  else if (element.dataset.action === "prefect") {
+    if (selectedStudent === undefined) {
+      alert("You can't make prefect an expelled student");
+    } else {
+      const indexOfPrefectsList = prefectsList.findIndex(studentId);
+
+      //toggle button
+      if (element.value === "MAKE PREFECT") {
+        if (
+          prefectsList.filter(stud => stud.house === selectedStudent.house)
+            .length == 2
+        ) {
+          alert(
+            "there are already two prefects of " +
+              selectedStudent.house +
+              ".Remove one of them"
+          );
+        } else {
+          prefectsList.push(selectedStudent);
+          return (element.value = "REMOVE PREFECT");
+        }
+      } else if (element.value === "REMOVE PREFECT") {
+        prefectsList.splice(indexOfPrefectsList, 1);
+        return (element.value = "MAKE PREFECT");
+      }
+    }
+  }
+  console.log(prefectsList);
+
+  //return uuid;
+}
+//Expel: expelled student is add in expelledList in function clickSomething(), removes button and adds text"EXPELLED" in displayStudent(), and shows that is expelled in modal in showDetails();
+//---------------------------------------------------
+
+//Make PREFECT
+//----------------------------------------------------
+/*function countPrefects(student, house) {
+  if (prefectsList.filter(stud => stud.house === house).length == 2) {
+    alert("there are already two prefects of " + house + ".Remove one of them");
+  } else {
+    prefectsList.push(student);
+  }
+  console.log(prefectsList);
+}*/
+//Show the number of students in each house
+//--------------------------------------------------
+function countStudentsFromHouse(house) {
+  return activeList.filter(x => x.house === house).length;
+}
+function showNumber() {
+  document.querySelector(
+    "#noOfStudRavenclaw"
+  ).innerHTML = countStudentsFromHouse("Ravenclaw");
+  document.querySelector(
+    "#noOfStudSlytherin"
+  ).innerHTML = countStudentsFromHouse("Slytherin");
+  document.querySelector(
+    "#noOfStudGryffindor"
+  ).innerHTML = countStudentsFromHouse("Gryffindor");
+  document.querySelector(
+    "#noOfStudHufflepuff"
+  ).innerHTML = countStudentsFromHouse("Hufflepuff");
+}
+//Display the list
+//-------------------------------------------------
 function displayList(students) {
   document.querySelector("#list tbody").innerHTML = "";
 
   students.forEach(displayStudent);
 }
-
+//Display the students
+//--------------------------------------------------
 function displayStudent(student) {
   const clone = document
     .querySelector("template#studentList")
@@ -167,7 +234,7 @@ function displayStudent(student) {
   clone.querySelector("[data-field=firstName]").textContent = student.firstName;
   clone.querySelector("[data-field=lastName]").textContent = student.lastName;
   clone.querySelector("[data-field=house]").textContent = student.house;
-
+  //Checks if one of the displayed student is expelled and if it is, removes the button and adds a text content.
   let expelledStudent = expelledList.find(stud => stud.id === student.id);
   if (expelledStudent !== undefined) {
     clone.querySelector("[data-field=expelledStatus]").textContent =
@@ -176,7 +243,15 @@ function displayStudent(student) {
   } else if (expelledStudent === undefined) {
     clone.querySelector("[data-action=remove]").dataset.attribute = student.id;
   }
+  //Prefect
+  let prefectStudent = prefectsList.find(stud => stud.id === student.id);
+  if (prefectStudent !== undefined) {
+    clone.querySelector("[data-action = prefect]").value = "REMOVE PREFECT";
+  } else if (prefectsList === undefined) {
+    clone.querySelector("[data-action = prefect]").value = "ADD PREFECT";
+  }
 
+  clone.querySelector("[data-action=prefect]").dataset.attribute = student.id;
   clone
     .querySelector("[data-action=openButton]")
     .addEventListener("click", function() {
@@ -187,15 +262,19 @@ function displayStudent(student) {
   // append clone to list
   document.querySelector("#list tbody").appendChild(clone);
 }
-function toggleModal() {
-  modal.classList.toggle("show-modal");
-}
+//Toggle for open, close the modal
+//------------------------------------------------
 function windowOnClick(event) {
   if (event.target === modal) {
     toggleModal();
   }
 }
 close.addEventListener("click", toggleModal);
+function toggleModal() {
+  modal.classList.toggle("show-modal");
+}
+//Show details in modal
+//-------------------------------------------------
 function showDetails(data) {
   if (data.middleName !== "-middleName-") {
     modal.querySelector(".modal-fullname").textContent =
@@ -216,16 +295,24 @@ function showDetails(data) {
   modal.querySelector(
     ".modal-crest"
   ).src = `images/crest/${data.house.toLowerCase()}-crest.jpg`;
-
+  //Checks if a student is expelled; if it is, shows in the modal "EXPELLED"
   let expelledStudent = expelledList.find(stud => stud.id === `${data.id}`);
   if (expelledStudent !== undefined) {
     modal.querySelector(".modal-expel").textContent = `${data.expel}`;
   } else {
     modal.querySelector(".modal-expel").textContent = "";
   }
+  //Checks if a student is prefect; if it is, shows in the modal "PREFECT"
+  let prefectStudent = prefectsList.find(stud => stud.id === `${data.id}`);
+  if (prefectStudent !== undefined) {
+    modal.querySelector(".modal-prefect").textContent = `${data.prefect}`;
+  } else {
+    modal.querySelector(".modal-prefect").textContent = "";
+  }
 }
 
 //Prototype for Student
+//--------------------------------------------------
 const StudentPrototype = {
   firstName: "-firstName-",
   middleName: "-middleName-",
@@ -236,6 +323,7 @@ const StudentPrototype = {
   prefect: "-prefect-"
 };
 //create UUID source: https://www.w3resource.com/javascript-exercises/javascript-math-exercise-23.php
+//------------------------------------------------------
 function create_UUID() {
   var dt = new Date().getTime();
   var uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(
