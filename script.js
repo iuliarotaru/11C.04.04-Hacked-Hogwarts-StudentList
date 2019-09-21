@@ -1,6 +1,7 @@
 "use strict";
 
 let studentList_link = "http://petlatkea.dk/2019/hogwartsdata/students.json";
+let families_link = "http://petlatkea.dk/2019/hogwartsdata/families.json";
 let modal = document.querySelector(".modal");
 let close = document.querySelector(".close");
 let modalImg = document.querySelector("modal-image");
@@ -42,12 +43,12 @@ function loadJSON() {
   fetch(studentList_link)
     .then(response => response.json())
     .then(jsonData => {
-      cleanObjects(jsonData);
+      prepareStudentData(jsonData);
     });
 }
 //Prepare the objects
 //----------------------------------------------------
-function cleanObjects(jsonData) {
+function prepareStudentData(jsonData) {
   jsonData.forEach(jsonObject => {
     const student = Object.create(StudentPrototype);
     //Interpret jsonObject into student properties;
@@ -73,6 +74,7 @@ function cleanObjects(jsonData) {
     student.id = create_UUID();
     student.expel = "EXPELLED";
     student.prefect = "PREFECT";
+    //student.bloodStatus;
     allStudents.push(student);
     activeList.push(student);
     document.querySelector("#noOfActiveStud").innerHTML = activeList.length;
@@ -121,6 +123,7 @@ function sortListBy(prop) {
 }
 //Function for clicking EXPEL or MAKE PREFECT
 //------------------------------------------------------
+// It is a big function but I couldn't find a way to use the inside variables in other functions so I decided to work only here for EXPEL and MAKE PREFECTS.
 function clickSomething(event) {
   const element = event.target; //the thing that was clicked
 
@@ -190,14 +193,7 @@ function clickSomething(event) {
 
 //Make PREFECT
 //----------------------------------------------------
-/*function countPrefects(student, house) {
-  if (prefectsList.filter(stud => stud.house === house).length == 2) {
-    alert("there are already two prefects of " + house + ".Remove one of them");
-  } else {
-    prefectsList.push(student);
-  }
-  console.log(prefectsList);
-}*/
+
 //Show the number of students in each house
 //--------------------------------------------------
 function countStudentsFromHouse(house) {
@@ -243,7 +239,7 @@ function displayStudent(student) {
   } else if (expelledStudent === undefined) {
     clone.querySelector("[data-action=remove]").dataset.attribute = student.id;
   }
-  //Prefect
+  //Checks if one of the displayed student is prefect and if it is, keeps the value of the button "REMOVE PREFECT" no matter sorting or filtering, and if it is not, then keeps the value"ADD PREFECT"
   let prefectStudent = prefectsList.find(stud => stud.id === student.id);
   if (prefectStudent !== undefined) {
     clone.querySelector("[data-action = prefect]").value = "REMOVE PREFECT";
@@ -252,6 +248,7 @@ function displayStudent(student) {
   }
 
   clone.querySelector("[data-action=prefect]").dataset.attribute = student.id;
+
   clone
     .querySelector("[data-action=openButton]")
     .addEventListener("click", function() {
@@ -309,6 +306,43 @@ function showDetails(data) {
   } else {
     modal.querySelector(".modal-prefect").textContent = "";
   }
+  //Blood status
+  //-------------------------------------------------
+  loadFamilyJSON();
+
+  const FamilyPrototype = {
+    halfBlood: "-half-",
+    pureBlood: "-pure-"
+  };
+
+  function loadFamilyJSON() {
+    fetch(families_link)
+      .then(response => response.json())
+      .then(jsonData => {
+        prepareFamilyData(jsonData);
+      });
+  }
+  function prepareFamilyData(jsonData) {
+    const family = Object.create(FamilyPrototype);
+    //Interpret jsonObject into student properties;
+
+    family.halfBlood = jsonData.half;
+    family.pureBlood = jsonData.pure;
+    setBloodStatus(family);
+  }
+  function setBloodStatus(family) {
+    if (family.halfBlood.includes(`${data.lastName}`)) {
+      modal.querySelector(
+        ".modal-blood"
+      ).textContent = `blood status: half-blood`;
+    } else if (family.pureBlood.includes(`${data.lastName}`)) {
+      modal.querySelector(
+        ".modal-blood"
+      ).textContent = `blood status: pure-wizard`;
+    } else {
+      modal.querySelector(".modal-blood").textContent = `blood status: muggle`;
+    }
+  }
 }
 
 //Prototype for Student
@@ -322,6 +356,7 @@ const StudentPrototype = {
   expel: "-expelled-",
   prefect: "-prefect-"
 };
+
 //create UUID source: https://www.w3resource.com/javascript-exercises/javascript-math-exercise-23.php
 //------------------------------------------------------
 function create_UUID() {
