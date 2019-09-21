@@ -16,7 +16,7 @@ const prefectsList = [];
 //Function start has event listeners for sorting and filtering, clicking buttons and calls the function that loads JSON
 function start() {
   document.querySelector("#sorting").addEventListener("change", selectSorting);
-  document.querySelector("#students").addEventListener("click", clickSomething);
+  document.querySelector("#students").addEventListener("click", expelStudent);
 
   document.querySelector(".ravenclaw").addEventListener("click", function() {
     filterList("Ravenclaw");
@@ -121,25 +121,22 @@ function sortListBy(prop) {
   });
   displayList(currentList);
 }
-//Function for clicking EXPEL or MAKE PREFECT
-//------------------------------------------------------
-// It is a big function but I couldn't find a way to use the inside variables in other functions so I decided to work only here for EXPEL and MAKE PREFECTS.
-function clickSomething(event) {
+//Expel
+//---------------------------------------------------
+function expelStudent(event) {
   const element = event.target; //the thing that was clicked
 
   const uuid = element.dataset.attribute;
 
   let selectedStudent = activeList.find(student => student.id === uuid);
-
-  function studentId(student) {
-    if (student.id === uuid) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-  //if you want to expel a student
   if (element.dataset.action === "remove") {
+    function studentId(student) {
+      if (student.id === uuid) {
+        return true;
+      } else {
+        return false;
+      }
+    }
     element.value = "EXPELLED";
     element.disabled = "true";
     element.classList.add("buttonstyle");
@@ -156,44 +153,49 @@ function clickSomething(event) {
     showNumber();
     document.querySelector("#noOfActiveStud").innerHTML = activeList.length;
   }
-  //if you want to make the student prefect
-  else if (element.dataset.action === "prefect") {
-    if (selectedStudent === undefined) {
-      alert("You can't make prefect an expelled student");
-    } else {
-      const indexOfPrefectsList = prefectsList.findIndex(studentId);
-
-      //toggle button
-      if (element.value === "MAKE PREFECT") {
-        if (
-          prefectsList.filter(stud => stud.house === selectedStudent.house)
-            .length == 2
-        ) {
-          alert(
-            "there are already two prefects of " +
-              selectedStudent.house +
-              ".Remove one of them"
-          );
-        } else {
-          prefectsList.push(selectedStudent);
-          return (element.value = "REMOVE PREFECT");
-        }
-      } else if (element.value === "REMOVE PREFECT") {
-        prefectsList.splice(indexOfPrefectsList, 1);
-        return (element.value = "MAKE PREFECT");
-      }
-    }
-  }
-  console.log(prefectsList);
-
-  //return uuid;
 }
-//Expel: expelled student is add in expelledList in function clickSomething(), removes button and adds text"EXPELLED" in displayStudent(), and shows that is expelled in modal in showDetails();
-//---------------------------------------------------
-
 //Make PREFECT
 //----------------------------------------------------
+function makePrefectStudent(event) {
+  const element = event.target; //the thing that was clicked
 
+  const uuid = element.dataset.attribute;
+
+  let selectedStudent = activeList.find(student => student.id === uuid);
+
+  function studentId(student) {
+    if (student.id === uuid) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  if (selectedStudent === undefined) {
+    alert("You can't make prefect an expelled student");
+  } else {
+    const indexOfPrefectsList = prefectsList.findIndex(studentId);
+
+    //toggle button
+    if (element.value === "MAKE PREFECT") {
+      if (
+        prefectsList.filter(stud => stud.house === selectedStudent.house)
+          .length == 2
+      ) {
+        alert(
+          "There are already two prefects of " +
+            selectedStudent.house +
+            ".Remove one of them"
+        );
+      } else {
+        prefectsList.push(selectedStudent);
+        return (element.value = "REMOVE PREFECT");
+      }
+    } else if (element.value === "REMOVE PREFECT") {
+      prefectsList.splice(indexOfPrefectsList, 1);
+      return (element.value = "MAKE PREFECT");
+    }
+  }
+}
 //Show the number of students in each house
 //--------------------------------------------------
 function countStudentsFromHouse(house) {
@@ -248,6 +250,9 @@ function displayStudent(student) {
   }
 
   clone.querySelector("[data-action=prefect]").dataset.attribute = student.id;
+  clone
+    .querySelector("[data-field=prefect")
+    .addEventListener("click", makePrefectStudent);
 
   clone
     .querySelector("[data-action=openButton]")
