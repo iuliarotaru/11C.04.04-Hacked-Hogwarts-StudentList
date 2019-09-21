@@ -16,7 +16,7 @@
   visibility: hidden;
   transform: scale(1.1);
 }
-.modal-content {
+.modal-placeholder {
   position: absolute;
   top: 50%;
   left: 50%;

@@ -73,6 +73,14 @@
             data-field="prefect"
           />
         </td>
+        <!--<td>
+          <input
+            type="button"
+            value="Add to Inquisitorial Squad"
+            data-action="inquisitorial"
+            data-field="inquisitorial"
+          />
+        </td> -->
         <td>
           <input type="button" value="EXPEL" data-action="remove" id="remove" />
         </td>
@@ -82,16 +90,26 @@
 
     <!-- The Modal -->
     <div id="myModal" class="modal">
+      <div class="modal-placeholder"></div>
+      <span class="close">&times;</span>
       <!-- Modal content -->
-      <div class="modal-content">
-        <span class="close">&times;</span>
+      <template class="modal-content">
         <img class="modal-crest" src="student-crest" alt="house crest" />
         <p class="modal-fullname">Full Name</p>
         <img class="modal-image" src="student-image" alt="some img" />
-        <p class="modal-expel">EXPELLED</p>
-        <p class="modal-prefect">PREFECT</p>
-        <p class="modal-blood">Blood Status</p>
-      </div>
+        <div class="information>">
+          <p class="modal-expel">EXPELLED</p>
+          <p class="modal-prefect">PREFECT</p>
+          <p class="modal-blood">Blood Status</p>
+          <p class="modal-inquisitorial"></p>
+        </div>
+        <input
+          type="button"
+          value="Add to Inquisitorial Squad"
+          data-action="inquisitorial"
+          id="inquisitorial"
+        />
+      </template>
     </div>
 
     <script src="script.js"></script>
