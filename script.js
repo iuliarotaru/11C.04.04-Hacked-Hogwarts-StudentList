@@ -90,12 +90,23 @@ function prepareStudentData(jsonData) {
     student.expel = "EXPELLED";
     student.prefect = "PROUD PREFECT";
     student.inquisitorial = "Member of Inquisitorial Squad";
+    //pushing students to allStudents and activeList arrays
     allStudents.push(student);
     activeList.push(student);
     document.querySelector("#noOfActiveStud").innerHTML = activeList.length;
     showNumber();
   });
-
+  //hacking myself in the list
+  const meStudent = Object.create(StudentPrototype);
+  meStudent.firstName = "Iulia";
+  meStudent.lastName = "Rotaru";
+  meStudent.house = "Slytherin";
+  meStudent.id = "1119";
+  meStudent.expel = "EXPELLED";
+  meStudent.prefect = "PROUD PREFECT";
+  meStudent.inquisitorial = "Member of Inquisitorial Squad";
+  allStudents.push(meStudent);
+  activeList.push(meStudent);
   rebuildList();
 }
 //capitalize
@@ -149,8 +160,13 @@ function expelStudent(event) {
       return false;
     }
   }
+
   let selectedStudent = activeList.find(student => student.id === uuid);
-  if (element.dataset.action === "remove") {
+  console.log(selectedStudent);
+  if (
+    element.dataset.action === "remove" &&
+    selectedStudent.firstName !== "Iulia"
+  ) {
     element.value = "EXPELLED";
     element.disabled = "true";
     element.classList.add("buttonstyle");
@@ -170,6 +186,8 @@ function expelStudent(event) {
 
     showNumber();
     document.querySelector("#noOfActiveStud").innerHTML = activeList.length;
+  } else if (selectedStudent.firstName === "Iulia") {
+    alert("YOU CAN'T EXPEL ME!");
   }
 }
 //Make PREFECT

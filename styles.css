@@ -129,3 +129,28 @@ button:active {
   box-shadow: 0 5px #666;
   transform: translateY(4px);
 }
+.animation {
+  position: relative;
+  animation: 0.2s shake infinite alternate;
+}
+
+@keyframes animation {
+  0% {
+    transform: skewX(-15deg);
+  }
+  5% {
+    transform: skewX(15deg);
+  }
+  10% {
+    transform: skewX(-15deg);
+  }
+  15% {
+    transform: skewX(15deg);
+  }
+  20% {
+    transform: skewX(0deg);
+  }
+  100% {
+    transform: skewX(0deg);
+  }
+}
