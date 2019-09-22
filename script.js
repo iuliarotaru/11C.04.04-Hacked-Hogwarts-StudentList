@@ -67,9 +67,7 @@ const StudentPrototype = {
 function prepareStudentData(jsonData) {
   jsonData.forEach(jsonObject => {
     const student = Object.create(StudentPrototype);
-    //Interpret jsonObject into student properties;
 
-    //clean fullname
     let trimFullName = jsonObject.fullname.trim();
     let splitFullName = trimFullName.split(/[ ,.""-]+/);
 
@@ -82,8 +80,6 @@ function prepareStudentData(jsonData) {
       student.middleName = capitalize(splitFullName[1]);
       student.lastName = capitalize(splitFullName[2]);
     }
-
-    //clean house
     let trimHouse = jsonObject.house.trim();
     student.house = capitalize(trimHouse);
 
@@ -151,7 +147,7 @@ function sortListBy(prop) {
 //Expel
 //---------------------------------------------------
 function expelStudent(event) {
-  const element = event.target; //the thing that was clicked
+  const element = event.target;
 
   const uuid = element.dataset.attribute;
   function studentId(student) {
@@ -161,7 +157,6 @@ function expelStudent(event) {
       return false;
     }
   }
-
   let selectedStudent = activeList.find(student => student.id === uuid);
   console.log(selectedStudent);
   if (
@@ -194,7 +189,7 @@ function expelStudent(event) {
 //Make PREFECT
 //----------------------------------------------------
 function makePrefectStudent(event) {
-  const element = event.target; //the thing that was clicked
+  const element = event.target;
 
   const uuid = element.dataset.attribute;
 
@@ -341,6 +336,7 @@ function showDetails(data) {
   clone.querySelector(
     ".modal-crest"
   ).src = `images/crest/${data.house.toLowerCase()}-crest.png`;
+  //sets different styles for each house
   if (`${data.house}` === "Slytherin") {
     modalBox.dataset.theme = "Slytherin";
   } else if (`${data.house}` === "Hufflepuff") {
