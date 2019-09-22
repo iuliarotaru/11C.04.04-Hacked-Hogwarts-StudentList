@@ -1,7 +1,7 @@
 "use strict";
 
-let studentList_link = "http://petlatkea.dk/2019/hogwartsdata/students.json";
-let families_link = "http://petlatkea.dk/2019/hogwartsdata/families.json";
+let studentList_link = "https://petlatkea.dk/2019/hogwartsdata/students.json";
+let families_link = "https://petlatkea.dk/2019/hogwartsdata/families.json";
 let modal = document.querySelector(".modal");
 let close = document.querySelector(".close");
 let modalImg = document.querySelector("modal-image");
