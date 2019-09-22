@@ -5,6 +5,7 @@ let families_link = "http://petlatkea.dk/2019/hogwartsdata/families.json";
 let modal = document.querySelector(".modal");
 let close = document.querySelector(".close");
 let modalImg = document.querySelector("modal-image");
+let modalBox = document.querySelector(".modal-placeholder");
 
 window.addEventListener("DOMContentLoaded", start);
 
@@ -339,7 +340,16 @@ function showDetails(data) {
   //show crest
   clone.querySelector(
     ".modal-crest"
-  ).src = `images/crest/${data.house.toLowerCase()}-crest.jpg`;
+  ).src = `images/crest/${data.house.toLowerCase()}-crest.png`;
+  if (`${data.house}` === "Slytherin") {
+    modalBox.dataset.theme = "Slytherin";
+  } else if (`${data.house}` === "Hufflepuff") {
+    modalBox.dataset.theme = "Hufflepuff";
+  } else if (`${data.house}` === "Ravenclaw") {
+    modalBox.dataset.theme = "Ravenclaw";
+  } else if (`${data.house}` === "Gryffindor") {
+    modalBox.dataset.theme = "Gryffindor";
+  }
   //Checks if a student is expelled; if it is, shows in the modal "EXPELLED"
   let expelledStudent = expelledList.find(stud => stud.id === `${data.id}`);
   if (expelledStudent !== undefined) {

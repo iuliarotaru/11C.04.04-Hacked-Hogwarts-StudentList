@@ -42,20 +42,22 @@
         </select>
       </label>
     </div>
-    <table id="list">
-      <thead>
-        <th data-sort="firstName">
-          First Name
-        </th>
-        <th data-sort="lastName">
-          Last Name
-        </th>
-        <th data-sort="house">House</th>
-      </thead>
-      <tbody id="students">
-        <!-- animal template will be copied and inserted here -->
-      </tbody>
-    </table>
+    <div id="wrapper">
+      <table id="list">
+        <thead>
+          <th data-sort="firstName">
+            First Name
+          </th>
+          <th data-sort="lastName">
+            Last Name
+          </th>
+          <th data-sort="house">House</th>
+        </thead>
+        <tbody id="students">
+          <!-- animal template will be copied and inserted here -->
+        </tbody>
+      </table>
+    </div>
 
     <template id="studentList">
       <tr>
@@ -73,14 +75,7 @@
             data-field="prefect"
           />
         </td>
-        <!--<td>
-          <input
-            type="button"
-            value="Add to Inquisitorial Squad"
-            data-action="inquisitorial"
-            data-field="inquisitorial"
-          />
-        </td> -->
+
         <td>
           <input type="button" value="EXPEL" data-action="remove" id="remove" />
         </td>
@@ -108,6 +103,7 @@
           value="Add to Inquisitorial Squad"
           data-action="inquisitorial"
           id="inquisitorial"
+          class="modal-button"
         />
       </template>
     </div>

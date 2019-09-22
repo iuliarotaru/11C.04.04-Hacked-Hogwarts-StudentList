@@ -1,10 +1,70 @@
-.student {
-  border: 1px solid black;
-  margin-top: 5px;
+[data-theme="Slytherin"] {
+  --background-color: #aaaaaa;
+  --text-color: #0d6217;
+}
+[data-theme="Hufflepuff"] {
+  --background-color: #eee117;
+  --text-color: #000000;
+}
+[data-theme="Ravenclaw"] {
+  --background-color: #946b2d;
+  --text-color: #000a90;
+}
+[data-theme="Gryffindor"] {
+  --background-color: #7f0909;
+  --text-color: #ffc500;
+}
+body {
+  margin: 0;
+  padding: 0;
 }
 .hide {
   display: none;
 }
+tbody {
+  margin-top: 50px;
+}
+table,
+thead,
+tbody,
+th,
+td,
+tr {
+  display: block;
+}
+thead tr {
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+}
+tr {
+  border: none;
+}
+td {
+  border: none;
+  position: relative;
+}
+td:before {
+  position: absolute;
+  top: 12px;
+  left: 6px;
+  width: 200px;
+  padding-right: 40px;
+  white-space: nowrap;
+  margin-left: -150px;
+}
+
+tbody {
+  align-content: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(305px, 1fr));
+  grid-gap: 10px;
+}
+[data-field="firstName"],
+[data-field="lastName"] {
+  display: inline-block;
+}
+
 .modal {
   position: fixed;
   left: 0;
@@ -23,7 +83,7 @@
   transform: translate(-50%, -50%);
   background-color: white;
   padding: 1rem 1.5rem;
-  width: 24rem;
+  width: 29rem;
   border-radius: 0.5rem;
 }
 .modal-crest {
@@ -33,7 +93,7 @@
 .close {
   float: right;
   width: 1.5rem;
-  line-height: 1.5rem;
+  height: 30px;
   text-align: center;
   cursor: pointer;
   border-radius: 0.25rem;
@@ -48,16 +108,40 @@
   transform: scale(1);
   transition: visibility 0s linear 0s, opacity 0.25s 0s, transform 0.25s;
 }
-.shrink {
-  animation: shrink 0.5s linear 1 forwards;
+.modal-placeholder {
+  display: grid;
+  grid-template-columns: 0.75fr 1fr;
+  grid-template-rows: auto;
+  grid-gap: 10px;
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
-@keyframes shrink {
-  from {
-    transform: scale(1, 1);
-  }
-  to {
-    transform: scale(1, 0);
-  }
+.modal-image {
+  grid-row: 1/2;
+  grid-column: 1/2;
+  justify-self: center;
+}
+.modal-fullname {
+  grid-row: 1/2;
+  grid-column: 2/3;
+  justify-self: center;
+}
+.modal-crest {
+  width: 150px;
+  height: 150px;
+  grid-row: 2/3;
+  grid-column: 1/2;
+  justify-self: center;
+}
+.information {
+  grid-row: 2/3;
+  grid-column: 2/3;
+}
+.modal-button {
+  grid-row: 3/4;
+  grid-column: 1/3;
+  width: 200px;
+  justify-self: center;
 }
 .buttonstyle {
   color: red;
@@ -78,11 +162,16 @@ body {
   text-align: center;
 }
 html {
-  background-color: #ede0b3;
+  background-color: #ede1b4;
+}
+@font-face {
+  font-family: "harrypotter";
+  src: url("ParryHotter.ttf");
 }
 h1,
 h3 {
   text-align: center;
+  font-family: harrypotter;
 }
 p,
 span {
@@ -92,10 +181,11 @@ span {
   padding: 10px;
   margin: 10px;
 }
+span {
+  font-family: harrypotter;
+}
 tr {
   font-size: 20px;
-  border: 1px solid black;
-  margin-left: 10px;
 }
 button {
   background-color: #7ba2ba;
@@ -113,7 +203,7 @@ button {
   text-decoration: none;
   outline: none;
   color: #fff;
-  background-color: #7ba2ba;
+  background-color: rgba(0, 0, 0, 0.7);
   border: none;
   border-radius: 15px;
   box-shadow: 0 9px #999;
@@ -128,29 +218,4 @@ button:active {
   background-color: #6e6853;
   box-shadow: 0 5px #666;
   transform: translateY(4px);
-}
-.animation {
-  position: relative;
-  animation: 0.2s shake infinite alternate;
-}
-
-@keyframes animation {
-  0% {
-    transform: skewX(-15deg);
-  }
-  5% {
-    transform: skewX(15deg);
-  }
-  10% {
-    transform: skewX(-15deg);
-  }
-  15% {
-    transform: skewX(15deg);
-  }
-  20% {
-    transform: skewX(0deg);
-  }
-  100% {
-    transform: skewX(0deg);
-  }
 }
