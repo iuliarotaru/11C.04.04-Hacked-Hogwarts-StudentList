@@ -420,7 +420,7 @@ function showDetails(data) {
 
       let selectedStudent = activeList.find(student => student.id === uuid);
       if (selectedStudent === undefined) {
-        alert("You can't make prefect an expelled student");
+        alert("You can't add to inquisitorial squad an expelled student");
       } else {
         const indexOfInquisitorialList = inquisitorialList.findIndex(studentId);
         function studentId(student) {
